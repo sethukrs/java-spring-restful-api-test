@@ -6,6 +6,7 @@ import uk.co.huntersix.spring.rest.model.Person;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonDataService {
@@ -23,5 +24,11 @@ public class PersonDataService {
                 .orElseThrow(
                         () -> new PersonDoesNotExistException("User with lastName : " + lastName
                         + ", firstName : " + firstName + " does not exist"));
+    }
+
+    public List<Person> findPersonByLastName(String lastName) {
+        return PERSON_DATA.stream()
+                .filter(p -> p.getLastName().equalsIgnoreCase(lastName))
+                .collect(Collectors.toList());
     }
 }

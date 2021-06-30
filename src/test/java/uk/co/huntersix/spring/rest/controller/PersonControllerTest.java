@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import uk.co.huntersix.spring.rest.exception.PersonDoesNotExistException;
 import uk.co.huntersix.spring.rest.model.Person;
 import uk.co.huntersix.spring.rest.referencedata.PersonDataService;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PersonController.class)
@@ -38,6 +42,33 @@ public class PersonControllerTest {
             .andExpect(jsonPath("id").exists())
             .andExpect(jsonPath("firstName").value("Mary"))
             .andExpect(jsonPath("lastName").value("Smith"));
+    }
+
+    @Test
+    public void shouldReturnAllPersonsWithSurname() throws Exception {
+        when(personDataService.findPersonByLastName(any()))
+                .thenReturn(Arrays.asList(new Person("Mary", "Smith"), new Person("John", "Smith")));
+
+        this.mockMvc.perform(get("/person/smith"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].id").exists())
+                .andExpect(jsonPath("$.[0].firstName").value("Mary"))
+                .andExpect(jsonPath("$.[0].lastName").value("Smith"))
+                .andExpect(jsonPath("$.[1].id").exists())
+                .andExpect(jsonPath("$.[1].firstName").value("John"))
+                .andExpect(jsonPath("$.[1].lastName").value("Smith"));
+    }
+
+    @Test
+    public void shouldReturnNoPersonsWithInvalidSurname() throws Exception {
+        when(personDataService.findPersonByLastName(any()))
+                .thenReturn(Arrays.asList());
+
+        this.mockMvc.perform(get("/person/null"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].id").doesNotExist());
     }
 
     @Test

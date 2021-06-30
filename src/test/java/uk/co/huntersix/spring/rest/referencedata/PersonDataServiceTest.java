@@ -8,6 +8,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import uk.co.huntersix.spring.rest.exception.PersonDoesNotExistException;
 import uk.co.huntersix.spring.rest.model.Person;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static junit.framework.TestCase.*;
 
 @RunWith(SpringRunner.class)
@@ -25,6 +28,25 @@ public class PersonDataServiceTest {
 
         assertEquals(expected.getFirstName(), actual.getFirstName());
         assertEquals(expected.getLastName(), actual.getLastName());
+    }
+
+    @Test
+    public void shouldReturnExistingUsersByLastName() {
+        List<Person> expected = Arrays.asList(new Person("Mary", "Smith"));
+
+        List<Person> actual = personDataService.findPersonByLastName("Smith");
+
+        assertEquals(expected.size(), actual.size());
+        assertEquals(expected.get(0).getFirstName(), actual.get(0).getFirstName());
+        assertEquals(expected.get(0).getLastName(), actual.get(0).getLastName());
+    }
+
+    @Test
+    public void shouldReturnEmptyListOfUsersByInvalidLastName() {
+
+        List<Person> actual = personDataService.findPersonByLastName("null");
+
+        assertEquals(0, actual.size());
     }
 
     @Test (expected = PersonDoesNotExistException.class)
