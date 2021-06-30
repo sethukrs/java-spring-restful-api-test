@@ -6,6 +6,9 @@
 ## How to test
 ```./gradlew test```
 
+## Swagger UI
+http://localhost:8080/swagger-ui.html
+
 ## Exercises
 ### Exercise 1
 Make the tests run green (there should be one failing test)
