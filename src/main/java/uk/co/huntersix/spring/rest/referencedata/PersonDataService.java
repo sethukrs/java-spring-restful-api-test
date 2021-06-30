@@ -6,15 +6,20 @@ import uk.co.huntersix.spring.rest.exception.PersonDoesNotExistException;
 import uk.co.huntersix.spring.rest.model.Person;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @Service
 public class PersonDataService {
-    public static final Set<Person> PERSON_DATA = new HashSet<>(Arrays.asList(
-            new Person("Mary", "Smith"),
-            new Person("Brian", "Archer"),
-            new Person("Collin", "Brown")));
+    public static final Set<Person> PERSON_DATA = ConcurrentHashMap.newKeySet();
 
+    static {
+        PERSON_DATA.addAll(Arrays.asList(
+                new Person("Mary", "Smith"),
+                new Person("Brian", "Archer"),
+                new Person("Collin", "Brown")));
+    }
 
     public Person findPerson(String lastName, String firstName) {
         return PERSON_DATA.stream()

@@ -2,6 +2,7 @@ package uk.co.huntersix.spring.rest.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Person implements Serializable {
     private static final AtomicLong counter = new AtomicLong();
 
+    @ApiModelProperty(position = 1, required = true, hidden=true, notes = "used to display user id")
     private Long id;
 
     @NotBlank
