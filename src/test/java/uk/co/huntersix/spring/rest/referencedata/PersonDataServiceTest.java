@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.co.huntersix.spring.rest.exception.PersonAlreadyExistsException;
 import uk.co.huntersix.spring.rest.exception.PersonDoesNotExistException;
 import uk.co.huntersix.spring.rest.model.Person;
 
@@ -51,5 +52,23 @@ public class PersonDataServiceTest {
     public void shouldThrowPersonDoesNotExistWhenNoPersonFoundByName() throws Exception {
 
         personDataService.findPerson("None", "None");
+    }
+
+    @Test (expected = PersonAlreadyExistsException.class)
+    public void shouldThrowPersonAlreadyExist() throws Exception {
+
+        personDataService.savePerson(new Person("Mary", "Smith"));
+    }
+
+    @Test
+    public void shouldSavePerson() {
+
+        //when
+        personDataService.savePerson(new Person("David", "Beckham"));
+
+        //then
+        Person actual = personDataService.findPerson("Beckham", "David");
+        assertEquals("David", actual.getFirstName());
+        assertEquals("Beckham", actual.getLastName());
     }
 }

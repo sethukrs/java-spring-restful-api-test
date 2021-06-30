@@ -1,22 +1,36 @@
 package uk.co.huntersix.spring.rest.model;
 
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
-@EqualsAndHashCode
-public class Person {
+public class Person implements Serializable {
     private static final AtomicLong counter = new AtomicLong();
 
     private Long id;
+
+    @NotBlank
+    @Size(min = 1)
+    @Pattern(regexp = "^[a-zA-Z]*$")
     private String firstName;
+
+    @NotBlank
+    @Size(min = 1)
+    @Pattern(regexp = "^[a-zA-Z]*$")
     private String lastName;
 
     private Person() {
         // empty
     }
 
-    public Person(String firstName, String lastName) {
+    @JsonCreator
+    public Person(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
         this.id = counter.incrementAndGet();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,5 +58,18 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return firstName.equals(person.firstName) && lastName.equals(person.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName);
     }
 }

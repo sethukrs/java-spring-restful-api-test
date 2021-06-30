@@ -1,12 +1,12 @@
 package uk.co.huntersix.spring.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import uk.co.huntersix.spring.rest.model.Person;
 import uk.co.huntersix.spring.rest.referencedata.PersonDataService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +24,12 @@ public class PersonController {
     }
 
     @GetMapping("/person/{lastName}")
-    public List<Person> person(@PathVariable(value="lastName") String lastName) {
+    public List<Person> retrieveAllPerson(@PathVariable(value="lastName") String lastName) {
         return personDataService.findPersonByLastName(lastName);
+    }
+
+    @PostMapping(value = "/person", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createPerson(@Valid @RequestBody Person person) {
+        personDataService.savePerson(person);
     }
 }
