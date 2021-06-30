@@ -27,8 +27,13 @@ public class PersonDataService {
     }
 
     public List<Person> findPersonByLastName(String lastName) {
-        return PERSON_DATA.stream()
+        List<Person> personList = PERSON_DATA.stream()
                 .filter(p -> p.getLastName().equalsIgnoreCase(lastName))
                 .collect(Collectors.toList());
+
+        if (personList.isEmpty()) {
+            throw new PersonDoesNotExistException();
+        }
+            return personList;
     }
 }

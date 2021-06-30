@@ -61,14 +61,12 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void shouldReturnNoPersonsWithInvalidSurname() throws Exception {
-        when(personDataService.findPersonByLastName(any()))
-                .thenReturn(Arrays.asList());
+    public void shouldReturnNoPersonsWithDoesNotExistSurname() throws Exception {
+        doThrow(PersonDoesNotExistException.class).when(personDataService).findPersonByLastName(anyString());
 
         this.mockMvc.perform(get("/person/null"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].id").doesNotExist());
+                .andExpect(status().isNotFound());
     }
 
     @Test

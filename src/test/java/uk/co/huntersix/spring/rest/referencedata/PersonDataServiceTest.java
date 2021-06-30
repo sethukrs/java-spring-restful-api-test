@@ -41,18 +41,15 @@ public class PersonDataServiceTest {
         assertEquals(expected.get(0).getLastName(), actual.get(0).getLastName());
     }
 
-    @Test
+    @Test (expected = PersonDoesNotExistException.class)
     public void shouldReturnEmptyListOfUsersByInvalidLastName() {
 
-        List<Person> actual = personDataService.findPersonByLastName("null");
-
-        assertEquals(0, actual.size());
+        personDataService.findPersonByLastName("null");
     }
 
     @Test (expected = PersonDoesNotExistException.class)
     public void shouldThrowPersonDoesNotExistWhenNoPersonFoundByName() throws Exception {
 
         personDataService.findPerson("None", "None");
-
     }
 }
