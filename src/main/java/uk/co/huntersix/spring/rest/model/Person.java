@@ -1,7 +1,10 @@
 package uk.co.huntersix.spring.rest.model;
 
+import lombok.EqualsAndHashCode;
+
 import java.util.concurrent.atomic.AtomicLong;
 
+@EqualsAndHashCode
 public class Person {
     private static final AtomicLong counter = new AtomicLong();
 

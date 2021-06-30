@@ -1,11 +1,11 @@
 package uk.co.huntersix.spring.rest.referencedata;
 
 import org.springframework.stereotype.Service;
+import uk.co.huntersix.spring.rest.exception.PersonDoesNotExistException;
 import uk.co.huntersix.spring.rest.model.Person;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PersonDataService {
@@ -19,6 +19,9 @@ public class PersonDataService {
         return PERSON_DATA.stream()
             .filter(p -> p.getFirstName().equalsIgnoreCase(firstName)
                 && p.getLastName().equalsIgnoreCase(lastName))
-            .collect(Collectors.toList()).get(0);
+                .findFirst()
+                .orElseThrow(
+                        () -> new PersonDoesNotExistException("User with lastName : " + lastName
+                        + ", firstName : " + firstName + " does not exist"));
     }
 }
